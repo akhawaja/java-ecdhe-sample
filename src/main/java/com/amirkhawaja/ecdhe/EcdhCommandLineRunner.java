@@ -3,6 +3,7 @@ package com.amirkhawaja.ecdhe;
 import com.amirkhawaja.ecdhe.service.KeyService;
 import com.amirkhawaja.ecdhe.service.SymmetricEncryptionService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
-
-import static javax.xml.bind.DatatypeConverter.printHexBinary;
 
 @Component
 @Slf4j
@@ -44,9 +43,9 @@ public class EcdhCommandLineRunner implements CommandLineRunner {
 		final byte[] secret2 = keyService.deriveSharedSecret(alicePub.getEncoded(), bobPriv);
 
 		// Print the secrets
-		log.info("Do both the secrets match? {}", printHexBinary(secret1).equals(printHexBinary(secret2)));
-		log.info("Alice's secret: {}", printHexBinary(secret1));
-		log.info("Bob's secret: {}", printHexBinary(secret2));
+		log.info("Do both the secrets match? {}", Hex.encodeHexString(secret1).equals(Hex.encodeHexString(secret2)));
+		log.info("Alice's secret: {}", Hex.encodeHexString(secret1));
+		log.info("Bob's secret: {}", Hex.encodeHexString(secret2));
 
 		// Encrypt some text.
 		final byte[] content = encryptionService.encrypt(secret1, "This is a test".getBytes(StandardCharsets.UTF_8));
